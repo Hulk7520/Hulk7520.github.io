@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="董沅鑫, yuanxin.me@gmail.com">
+  
+  
+  
+  <title>day1_计算机进制介绍及进制间的转换详解 | LeoHulk</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="进制介绍及相互转化,">
+  
+
+  <script>
+    console.log('\n%c Hexo-theme-bmw v4.0 ' + '%c 🎉 https://github.com/dongyuanxin/theme-bmw 🎉\n' + '\n%c View demo online ' + '%c 🔍 https://godbmw.com/ 🔍  \n' , 'color: #fadfa3; background: #030307; padding:3px 0;', '', 'color: #fadfa3; background: #030307; padding:3px 0;', '');
+  </script>
+
+  
+    <meta name="description" content="一个不轻言放弃的青年人的逆袭！">
+  
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/icon/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+  <script src="/js/util.js"></script>
+<script src="/js/valine.min.js"></script>
+
+  
+
+  
+    <link href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js" async></script>
+  
+
+  
+    <link href="https://cdn.bootcss.com/social-share.js/1.0.16/css/share.min.css" rel="stylesheet">
+  
+  
+  <script src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js" async></script>
+  
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+  
+
+</head>
+
+  <body>
+
+    
+
+    <div id="app">
+
+      <div class="header-wrap">
+  <header>
+    <div class="site-brand">
+      <div class="site-title">
+        <a href="/">GODBMW.com</a>
+      </div>
+    </div>
+    <nav class="site-navigation">
+      <ul class="nav-menu">
+      
+        <li class="nav-item" data-path="/">
+          
+            <a href="/" target="_self">
+              主页
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          
+            <a href="/archives/" target="_self">
+              归档
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          
+            <a href="/categories/" target="_self">
+              分类
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          
+            <a href="/tags/" target="_self">
+              标签
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          
+            <a href="/friends/" target="_self">
+              友链
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          
+            <a href="/about/" target="_self">
+              关于
+            </a>
+          
+        </li>
+      
+        <li class="nav-item" data-path="">
+          
+            <a href="javascript:void(0);" v-else="">抓到我</a>
+            <ul class="nav-menu--dropdown">
+              
+                <li>
+                  <a href="https://github.com/dongyuanxin" target="_blank">
+                    Github
+                  </a>
+                </li>
+              
+                <li>
+                  <a href="https://www.zhihu.com/people/godbmw/activities" target="_blank">
+                    知乎
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </li>
+      
+      </ul>
+    </nav>
+    <i class="iconfont icon-menu"></i>
+  </header>
+</div>
+
+<script>
+  let links = document.querySelectorAll('.nav-item');
+  for(let link of links){
+    let childrenLink = link.querySelector('ul');
+    link.addEventListener('mouseenter', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown active";
+      }
+    })
+    link.addEventListener('mouseleave', () => {
+      if(childrenLink) {
+        childrenLink.className = "nav-menu--dropdown";
+      }
+    })
+  }
+  let rootRealPath = getRealPath(window.location.pathname, true);
+  for(let link of links) {
+    let linkPath = link.getAttribute("data-path");
+    if(linkPath && getRealPath(linkPath, true) === rootRealPath) {
+      link.className = "nav-item hover";
+    }
+  }
+
+  let iconMenu = document.querySelector("i.iconfont.icon-menu"),
+    iconMenuClicked = false;
+  let navDOM = document.querySelector("nav.site-navigation");
+  iconMenu.addEventListener("click", () => {
+    iconMenuClicked 
+      ? navDOM.className = "site-navigation active"
+      : navDOM.className = "site-navigation";
+    iconMenuClicked = !iconMenuClicked;
+  })
+</script>
+
+      
+
+
+
+
+
+
+
+
+<div class="container post-index">
+
+  
+
+<div class="post">
+  <h1 class="article-title">
+    <span>day1_计算机进制介绍及进制间的转换详解</span>
+  </h1>
+  <div class="article-top-meta">
+    <span>
+      发布 : 
+      2018-06-01
+    </span>
+    
+    
+      <span>
+        浏览 : <span class="article-timer" data-identity="01"></span>
+      </span>
+    
+  </div>
+
+  
+
+  <div class="article-content">
+    <div class="markdown-body">
+      <p>##计算机编码：<br>最小的单元是<strong>位</strong>（bit），接着是<strong>字节</strong>（Byte），一个字节 = 8位(1 Byte=8 bits)。<br>在计算机中存储和表达数据使用二进制数表示，除了二进制还有八进制，十进制，十六进制。</p>
+<p>##进制数的表达：<br>    十进制数，基数为十，用0~9之间的数表达。例如：7788<br>    二进制数，基数为二，用0、1表达。例如：表达一个byte类型的8 计算机中二进制表达：0000 1000<br>    八进制数，基数为八，用0~7之间数表达。 例如：33<br>    十六进制数，基数为十六，用0~9，和A、B、C、D、E、F表示。例如1AD</p>
+<p>##进制的介绍<br>　　在讲进制之前，我们先看一下数制的定义：用一组固定的数字和一套统一的规则来表示数目的方法称为数制。<br>　　而数制有进位计数制与非进位计数制之分。非进位计数制的数码表示的数值大小与它在数中的位置无关，这里我们不作过多的介绍。<br>　　进位计数制的数码所表示的数值大小则与它在数中所处的位置有关，常见的有二进制、十进制、十六进制，我们这里也只介绍这三种进制的转换。</p>
+<p>#####1：进位计数制的要素：<br>　　　　①、<strong>数码</strong>：用来表示进制数的元素。比如二进制数的数码为：0,1。十进制数的数码为：0,1,2,3,4,5,6,7,8,9。十六进制数的数码为：0,1,2,3,4,5,6,7,8,9，A,B,C,D,E,F<br>　　　　②、<strong>基数</strong>：数码的个数。比如二进制数的基数为2。十进制数的基数为10。十六进制数的基数为 16.<br>　　　　③、<strong>位权</strong>：数制中每一固定位置对应的单位值称为位权。例如十进制第2位的位权为10，第3位的位权为100；而二进制第2位的位权为2，第3位的位权为4，对于 N进制数，整数部分第 i位的位权为N^(i-1)，而小数部分第j位的位权为N^-j。<br>那么我们可以说：每个数码所表示的数值=该数码值 * 所处位置的位权。上面的内容概括起来可以看一下下面这张图： </p>
+<p>#####2：二进制转换成其他进制<br> 　　①、二进制（Binary）——&gt;十进制（Decimal）<br> 　　诀窍：以小数点为界，整数位从最后一 位（从右向左）开始算，依次列为第0、1、2、3………n，然后将第n位的数（0或1）乘以2的n-1次方，然后相加即可得到整数位的十进制数；小数位则 从左向右开始算，依次列为第1、2、3……..n，然后将第n位的数（0或1）乘以2的-n次方，然后相加即可得到小数位的十进制数（按权相加法）。<br> 　　例子：将二进制数（10.10101）2转化为十进制数。<br> 　　（10.10101）2=（1x21+0x20+1x2-1+0x2-2+1x2-3+0x2-4+1x2-5）10=（2+0+0.5+0+0.125+0+0.03125）10=（2.65625）10</p>
+<p> 　　②、二进制（Binary）——&gt;十六进制（Hex）<br> 　　诀窍：因为每四位二进制数对应一位十六进制数，所以，以小数点为界，整数位则将二进制数从右向左每4位一隔开，不足4位的在左边用0填补即可；小数位则将二进制数从左向右每4位一隔开，不足4位的在右边用0填补即可。<br> 　　例子：将二进制数（10.10101）2转化为十六进制数。<br> 　　（10.10101）2=（0010.1010 1000）2=（2.A8）16</p>
+<p>#####3：十进制转换成其他进制<br> 　　①、十进制（Decimal）——&gt;二进制（Binary）<br>　　诀窍：以小数点为界，整数部分除以2，然后取每次得到的商和余数，用商继续和2相除，直到商小于2。然后把第一次得到的余数作为二进制的个位，第二次得到的余数作为二进制的十位，依次类推，最后一次得到的小于2的商作为二进制的最高位，这样由商+余数组成的数字就是转换后二进制的值（整数部分用除2取余法）；小数部分则先乘2，然后获得运算结果的整数部分，将结果中的小数部分再次乘2，直到小数部分为零。然后把第一次得到的整数部分作为二进制小数的最高位，后续的整数部分依次作为低位，这样由各整数部分组成的数字就是转化后二进制小数的值（小数部分用乘2取整法）。<br>　　需要说明的是，有些十进制小数无法准确的用二进制进行表达，所以转换时符合一定的精度即可，这也是为什么计算机的浮点数运算不准确的原因。</p>
+<blockquote>
+<p>例子1：将十进制数（93）10转换成二进制数。<br>　　　　93/2=46……….1<br>　　　　46/2=23……….0<br>　　　　23/2=11……….1<br>　　　　11/2=5…………1<br>　　　　5/2=2……………1<br>　　　　2/2=1……………0<br>　　（93）10=（1011101）2</p>
+</blockquote>
+<blockquote>
+<p>例子2：将十进制数（0.3125）10转换成二进制数。<br>　　　　0.3125x2 = 0 . 625<br>　　　　0.625x2 = 1 .25<br>　　　　0.25x2 = 0 .5<br>　　　　0.5x2 = 1 .0<br>　　（0.3125）10=（0.0101）2</p>
+</blockquote>
+<p> 　　②、十进制（Decimal）——&gt;十六进制（Hex）<br>　　诀窍：方法同十进制转化成二进制类似。以小数点为界，整数部分除以16，然后取每次得到的商和余数，用商继续和16相除，直到商小于16。然后把第一次得到的余数作为十六进制的个位，第二次得到的余数作为十六进制的十位，依次类推，最后一次得到的小于16的商作为十六进制的最高位，这样由商+余数组成的数字就是转换后十六进制的值（整数部分用除16取余法）； 小数部分则先乘16，然后获得运算结果的整数部分，将结果中的小数部分再次乘16，直到小数部分为零。然后把第一次得到的整数部分作为十六进制小数的最高位，后续的整数部分依次作为低位，这样由各整数部分组成的数字就是转化后十六进制小数的值（小数部分用乘16取整法）。</p>
+<blockquote>
+<p>例子1：将十进制数（93）10转换成十六进制数。<br>　　　　93/16=5…………13（D）<br>　　　（93）10=（5D）16</p>
+</blockquote>
+<blockquote>
+<p>例子2: 将十进制数（0.3125）10转换成十六进制数。<br>　　　　0.3125x16 = 5 .0<br>　　　（0.3125）10=（0.5）16</p>
+</blockquote>
+<p>#####4：十六进制转成其他进制<br> 　　<strong>①</strong>、十六进制（Hex）——&gt;二进制（Binary）<br> 　　诀窍：十六进制转换成二进制与二进制转换成十六进制相反。每一位十六进制数对应四位二进制数<br> 　　例子1：将十六进制数（A7）16转换成二进制数。<br>　　（A7）16=（A 7）16=（1010 0111）2=（10100111）2<br>　　例子2：将十六进制数（0.D4）16转换成二进制数。<br>　　（0.D4）16=（0. D 4）16=（0. 1101 0100）2=（0.110101）2</p>
+<p> 　　<strong>②</strong>、十六进制（Hex）——&gt;十进制（Decimal）<br> 　　诀窍：方法同二进制转换成十进制类似。以 小数点为界，整数位从最后一位（从右向左）开始算，依次列为第0、1、2、3………n，然后将第n位的数（0-9，A-F）乘以16的n-1次方，然后相 加即可得到整数位的十进制数；小数位则从左向右开始算，依次列为第1、2、3……..n，然后将第n位的数（0-9，A-F）乘以16的-n次方，然后相 加即可得到小数位的十进制数（按权相加法）。<br> 　　<br>　　例子1：将十六进制数（A7）16转换成十进制数。<br>　　（A7）16=（10x161+7x160）10=（160+7）10=（167）10<br>　　例子2：将十六进制数（0.D4）16转换成十进制数。<br>　　（0.D4）16=（0+13x16-1+4x16-2）10=（0+0.8125+0.015625）10=（0.828125）10</p>
+<p>#####5：总结<br>　　<strong>①</strong>. 其他进制转十进制：将二进制数、十六进制数的各位数字分别乘以各自基数的(N-1)次方，其相加之和便是相应的十进制数，这是按权相加法。<br>　　<strong>②</strong>. 十进制转其他进制：整数部分用除基取余法，小数部分用乘基取整法，然后将整数与小数部分拼接成一个数作为转换的最后结果。<br>　　<strong>③</strong>. 二进制转十六进制：从小数点位置开始，整数部分向左，小数部分向右，每四位二进制为一组用一位十六进制的数字来表示，不足四位的用0补足。<br>　　<strong>④</strong>. 十六进制转二进制：每一位十六进制对应每四位二进制，不足用0补足。</p>
+<p>##进制转换技巧解析</p>
+<p>####1.二进制转换成十进制<br>提示：二进制中的每一个1乘以2的次方（注：1后面有多少位 该位置上就乘以2的多少次方）<br>1010111010=&gt;2^9 + 2^7 + 2^5 + 2^4 + 2^3 + 2^1 = 512+128+32+16+8+2 = 698<br>100010=&gt; 2^5 + 2^1 = 34</p>
+<p>####2.十进制转换成二进制<br>提示：把十进制的数直接分成2的次方数相加的情形<br>99=&gt; 64 + 32 + 2 + 1 =&gt;1100011<br>150=&gt;128＋16 +4 +2 =&gt; 10010110</p>
+<p>####3.二进制转换成八进制<br>提示：把二进制分成从右往左三个一组<br>110=&gt;2^2 2^1 =&gt; 4+2 =&gt;6<br>101011 =&gt;101 011 =&gt; 2^2 + 2^0  2^1 + 2^0 =&gt;53<br>1010101010 =&gt; 001 010 101 010 =&gt; 2^0 2^1 2^2+2^0 2^1 =&gt;1252</p>
+<p>####4.八进制转成二进制<br>提示：把八进制的每一位数值单独拆分为二进制<br>567 =&gt; 5 6 7 =&gt; 2^2+2^0  2^2+2^1 2^2+2^1+2^0 =&gt; 101 110 111 =&gt;101110111<br>123 =&gt;  1 2 3 =&gt; 001 010 011 =&gt; 1010011<br>71 =&gt; 7 1 =&gt;111 001 =&gt; 111001</p>
+<p>####5.二进制转成十六进制<br>提示：把二进制从右往左分成4个一组<br>10101001 =&gt; 1010 1001 =&gt; 2^3+2^1 2^3+2^0 =&gt; A9<br>10001 =&gt; 0001 0001 =&gt;2^0 2^0 =&gt;11<br>100101110 =&gt; 0001 0010 1110 =&gt; 1 2 2^3+2^2+2^1 = 12E</p>
+<p>####6.十六进制转成二进制<br>提示：把十六进制的每一数值 转化成4个一组的二进制<br>ad1 =&gt; 1010 1101 0001 =&gt; 101011010001<br>1ea8 =&gt; 0001 1110 1010 1000 =&gt;1111010101000</p>
+<p>####7.八进制转换成十进制<br>567 =&gt; 5<em>8^2 + 6</em>8^1 + 7<em>8^0 = 320 + 48 + 7 = 375<br>62 =&gt; 6</em>8^1 + 2*8^0 = 50</p>
+<p>####8.十进制转成八进制<br>提示： 把十进制先转成二进制 然后由二进制转换成八进制<br>365 =&gt; 2^8 + 2^6 + 2^5 + 2^3 + 2^2 +2^0 =&gt;101101101=&gt;101 101 101 =&gt;555<br>173=&gt; 2^7 + 2^5 + 2^3 + 2^2 + 2^0 = 10101101=&gt; 010 101 101 =&gt; 255</p>
+<p>####9.十进制转成十六进制<br>提示： 把十进制先转成二进制 然后由二进制转换成十六进制<br>123=&gt; 2^6 + 2^5 + 2^4 + 2^3 +2^1 + 2^0 = 0000 0111 1011 =&gt; 7B</p>
+<p>####10.十六进制转换成十进制<br>1a =&gt; 1<em>16^1 + 10</em>16^0 = 26<br>a9e =&gt;10<em>16^2 + 9</em>16^1 + 14 = 2718<br>5f =&gt; 5*16^1+ 15 = 95</p>
+<p>####11.八进制转十六进制<br>***提示：首先把八进制转换成二进制 而后再二进制转成十六进制<br>456 =&gt; 4 5 6=&gt; 100 101 110=&gt; 0001 0010 1110 =&gt; 1 2   8+4+2 =&gt;12e<br>47=&gt; 4 7 =&gt; 100 111 =&gt; 0010 0111=&gt; 2 7 =&gt; 27</p>
+<p>####12.十六进制转换成八进制<br>***提示：首先把十六进制转换成二进制 而后再二进制转成八进制<br>38d =&gt;0011 1000 1101 =&gt;1 110 001 101=&gt;1 6 1 5=&gt; 1615</p>
+
+    </div>
+  </div>
+  
+    <div class="copy-right">
+      <div class="markdown-body">
+        <blockquote>
+        
+        
+          本文作者 : GODBMW <br>
+        
+        原文链接 : <a href="">https://www.leohulk.com/passages/2018/06/01/</a><br>
+        版权声明 : 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+        </blockquote>
+      </div>
+    </div>
+  
+  
+  
+    <div class="social-share" style="margin-top: -2rem" data-wechat-qrcode-title="<p>微信扫一扫</p>" data-wechat-qrcode-helper="<p>微信右上角, 扫一扫分享</p>" data-sites="qzone, qq, weibo, wechat, douban, google, facebook, twitter">
+  <span style="color: #6b7487; font-size: 1.4rem;">分享到: </span>
+</div>
+<script src="https://cdn.bootcss.com/social-share.js/1.0.16/js/social-share.min.js" async></script>
+  
+
+  
+    <div id="reward">
+  
+    <p id="reward-meta">知识 & 情怀 | 二者兼得</p>
+  
+  <button id="reward-btn">
+    
+    <span>投食</span>
+  </button>
+  <div id="reward-qrcode">
+    
+      <div class="reward-qrcode--container">
+        <img class="qrcode-img" src="/images/wechat.png" alt="微信扫一扫, 向我投食">
+        <p class="qrcode-meta">微信扫一扫, 向我投食</p>
+      </div>
+    
+      <div class="reward-qrcode--container">
+        <img class="qrcode-img" src="/images/alipay.png" alt="支付宝扫一扫, 向我投食">
+        <p class="qrcode-meta">支付宝扫一扫, 向我投食</p>
+      </div>
+    
+  </div>
+
+</div>
+
+<script>
+  (() => {
+    let button = document.querySelector('#reward-btn'),
+      qrcode = document.querySelector('#reward-qrcode'),
+      display = false;
+    
+    button.addEventListener('click', () => {
+      qrcode.style.display = display ? 'none' : 'block'
+      display = !display
+    }, false)
+  })()
+</script>
+  
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+      <span>
+        
+          <i class="iconfont icon-06tags"></i>标签: 
+          
+          <span class="span--tag">
+            <a href="/tags/进制介绍及相互转化/">
+              #进制介绍及相互转化
+            </a>
+          </span>
+          
+        
+      </span>
+    </div>
+    <div class="article-meta pull-right">
+    </div>
+  </div>
+</div>
+
+
+  <aside id="sidebar">
+    <p id="sidebar-header"></p>
+    <ol id="sidebar-toc"></ol>
+  </aside>
+  <script async>setTimeout(generateToc, 10);</script>
+
+
+  <nav class="post-navigation">
+    
+    
+  </nav>
+
+  
+    <a href="#comment" class="comment-anchor"></a>
+<div class="comment-title"><i class="iconfont icon-footprint"></i> 留下足迹 <i class="iconfont icon-footprint"></i></div>
+<div id="vcomments"></div>
+
+<script defer>
+  if( true ) {
+    let path = getRealPath()
+    new Valine({
+      el: "#vcomments",
+      appId: "Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz",
+      appKey: "WaR7nrzhliHj9aVwdQzkdlGd",
+      notify: false,
+      verify: false,
+      avatar: "robohash",
+      placeholder: "正确填写邮箱, 才能及时收到回复哦♪(^∇^*)",
+      path
+    });
+  }
+</script>
+   
+
+  
+    <script defer>
+const valineAPI = (() => {
+  try {
+    AV.init("Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz", "WaR7nrzhliHj9aVwdQzkdlGd");
+  } catch(error) {}
+  const isExist = (identity) => {
+    identity = identity || getRealPath();
+    let query = new AV.Query('Timer');
+    return new Promise((resolve, reject) => {
+      query.equalTo("identity", identity);
+      query.find().then(results => {
+        resolve(results.length > 0);
+      }, error => reject(error));
+    })
+  }
+
+  const _get = (identity) => {
+    let query = null;
+    if(identity && identity instanceof Array){
+      let querys = [];
+      for(let i = 0; i < identity.length; ++i) {
+        querys[i] = new AV.Query('Timer');
+        querys[i].equalTo('identity', identity[i]);
+      }
+      query = AV.Query.or.apply(null ,querys);
+    } else {
+      identity = identity || getRealPath();
+      query = new AV.Query("Timer");
+      query.equalTo("identity", identity);
+    }
+
+    return new Promise((resolve, reject) => {
+      query.find()
+      .then(results => resolve(results))
+      .catch(error => reject(error))
+    })
+  }
+
+  const create = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let Todo = AV.Object.extend('Timer');
+      let todo = new Todo();
+      todo.set("times", 1);
+      todo.set("identity", identity);
+      todo.save().then(res => resolve(true), error => reject(error));
+    })
+  }
+
+  const update = (identity) => {
+    identity = identity || getRealPath();
+    return new Promise((resolve, reject) => {
+      let query = new AV.Query('Timer');
+      query.equalTo("identity", identity);
+      query.find().then(todos => {
+        todos.forEach(todo => {
+          todo.set("times", todo.attributes.times + 1);
+        });
+        return AV.Object.saveAll(todos);
+      }).then(todos => resolve(true), error => reject(error));
+    })
+  }
+
+  return {
+    isExist,
+    _get,
+    update,
+    create
+  }
+})()
+
+const calcAndWriteTimes = () => {
+  let isPost = true;
+
+  let timerAllDOM = document.querySelectorAll(".article-timer");
+
+  if(isPost) {
+    let identity = timerAllDOM[0].getAttribute("data-identity");
+    valineAPI.isExist(identity)
+    .then(exist => {
+      if(exist) {
+        return valineAPI.update(identity);
+      }
+      return new Promise(resolve => resolve(true));
+    })
+    .then( succuess => valineAPI._get(identity))
+    .then( result => timerAllDOM[0].innerText = result[0].attributes.times)
+    .catch(error => console.log(error.message))
+    return ;
+  }
+
+  let timerDOMCache = {};
+
+  for(let timerDOM of timerAllDOM) {
+    let identity = timerDOM.getAttribute("data-identity");
+    if(timerDOMCache.hasOwnProperty(identity)){
+      timerDOMCache[identity].dom.push(timerDOM);
+    }else{
+      timerDOMCache[identity] = {
+        dom: [timerDOM],
+        times: undefined
+      };
+    }
+  }
+
+  let identities = Object.keys(timerDOMCache);
+  valineAPI._get(identities).then(results => {
+    for(let result of results) {
+      let {identity, times} = result.attributes;
+      timerDOMCache[identity].times = times;
+      timerDOMCache[identity].dom.map(item => item.innerText = times);
+    }
+    for(let identity of identities) {
+      if(timerDOMCache[identity].times){
+        continue;
+      }
+      timerDOMCache[identity].dom.map(item => item.innerText = 1);
+      valineAPI.create(identity);
+    }
+  }).catch(error => console.log(error.message))
+}
+
+if(true){
+  calcAndWriteTimes();
+}
+</script>
+   
+
+</div>
+
+
+      <footer>
+  <p class="site-info">
+    博客已萌萌哒运行<span id="time-to-now"></span><span class="my-face">(●'◡'●)ﾉ♥</span>
+    <br>
+    Theme - <a href="https://github.com/dongyuanxin/theme-bmw">BMW</a> | Made With 💗 | Powered by <a href="https://godbmw.com/">GodBMW</a>
+    <br>
+    
+  </p>
+</footer>
+
+
+
+<script>
+const timeToNowDOM = document.querySelector("#time-to-now");
+const startTimestamp = new Date(2018, 1, 10).getTime();
+
+const updateTimeStr = () => {
+  let offset = parseInt(
+      (new Date().getTime() - startTimestamp) / 1000,
+      10
+    ),
+    day = Math.floor(offset / 86400),
+    hour = Math.floor((offset % 86400) / 3600),
+    minute = Math.floor(((offset % 86400) % 3600) / 60),
+    second = Math.floor(((offset % 86400) % 3600) % 60);
+  timeToNowDOM.innerHTML =
+    day + "天" + hour + "小时" + minute + "分钟" + second + "秒";
+  setTimeout(updateTimeStr, 500);
+}
+
+setTimeout(updateTimeStr, 500);
+</script>
+
+
+      <div class="back-to-top hidden">
+  <span>
+    <i class="iconfont icon-60"></i><span></span>%
+  </span>
+</div>
+
+<script>
+const updateIconToTop = percent => {
+  let dom = document.querySelector(".back-to-top span span");
+  dom.innerText = percent;
+  if(percent < 1) {
+    document.querySelector(".back-to-top").className = "back-to-top hidden";
+  } else {
+    document.querySelector(".back-to-top").className = "back-to-top";
+  }
+}
+
+const handleScoll = () => {
+  let isRunning = false;
+  return () => {
+    if (isRunning) return;
+    isRunning = true;
+    window.requestAnimationFrame(timestamp => {
+      let scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop,
+        scrollHeight =
+          document.documentElement.scrollHeight ||
+          document.body.scrollHeight,
+        clientHeight =
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+      isRunning = false;
+      if (scrollTop <= 1) {
+        updateIconToTop(0);
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight) {
+        updateIconToTop(100);
+      } else {
+        updateIconToTop(parseInt(
+          100 * scrollTop / (scrollHeight - clientHeight),
+          10
+        ));
+      }
+    });
+  };
+}
+
+const backToTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop,
+    delay = 10,
+    time = 200;
+  if (scrollTop <= 20) {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    return;
+  }
+  let step = Math.ceil(scrollTop * delay / time);
+  let timer = setInterval(() => {
+    scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    if (scrollTop - step <= 0) {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      clearInterval(timer);
+    } else {
+      document.documentElement.scrollTop = scrollTop - step;
+      document.body.scrollTop = scrollTop - step;
+    }
+  }, delay);
+}
+
+document.addEventListener("scroll", handleScoll(), false);
+
+document.querySelector(".back-to-top").addEventListener("click", backToTop, false);
+
+</script>
+
+    </div>
+
+    
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<script>
+  (() => {
+    const mathjaxConfig = {
+      showProcessingMessages: false, //关闭js加载过程信息
+      messageStyle: "none", //不显示信息
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]], //行内公式选择符
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]], //段内公式选择符
+        skipTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"] //避开某些标签
+      },
+      "HTML-CSS": {
+        availableFonts: ["STIX", "TeX"], //可选字体
+        showMathMenu: false //关闭右击菜单显示
+      }
+    }
+
+    let mathjaxInterval = setInterval(() => {
+      if(!window.MathJax){
+        return;
+      }
+      window.MathJax.Hub.Config(mathjaxConfig)
+      window.MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('app')])
+
+      clearInterval(mathjaxInterval)
+    }, 10)    
+  })()
+</script>
+    
+
+    <script src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js" async></script>
+<script async>
+  let fancyTimer = setInterval(function(){
+    if(!window.$){
+      return;
+    }
+    $(document).ready(function() {
+      $(".post img").each(function () {
+        if($(this).parent().get(0).tagName.toLowerCase() === "a") {
+          return;
+        }
+        // $(this).attr("data-fancybox", "gallery"); // if you add 'data-fancybox', img will display after showed
+        var element = document.createElement("a");
+        $(element).attr("data-fancybox", "gallery");
+        $(element).attr("href", $(this).attr("src"));
+        $(this).wrap(element);
+      });
+      
+      clearInterval(fancyTimer);
+    });
+  }, 10);
+</script>
+
+    
+  </body>
+
+</html>
